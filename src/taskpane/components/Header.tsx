@@ -28,7 +28,7 @@ const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
   const styles = useStyles();
 
   return (
-    <section className={styles.welcome__header}>
+    <section className={styles.welcome__header} style={{ border: "3px solid lime" }}>
       <Image width="90" height="90" src={logo} alt={title} />
       <h1 className={styles.message}>{message}</h1>
     </section>

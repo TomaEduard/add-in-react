@@ -4,6 +4,11 @@ import App from "./components/App";
 import { FluentProvider, webLightTheme } from "@fluentui/react-components";
 
 /* global document, Office, module, require, HTMLElement */
+import { PublicClientApplication } from "@azure/msal-browser";
+import { MsalProvider } from "@azure/msal-react";
+import { msalConfig } from "../authConfig";
+
+const msalInstance = new PublicClientApplication(msalConfig);
 
 const title = "Contoso Task Pane Add-in";
 
@@ -13,9 +18,11 @@ const root = rootElement ? createRoot(rootElement) : undefined;
 /* Render application after Office initializes */
 Office.onReady(() => {
   root?.render(
-    <FluentProvider theme={webLightTheme}>
-      <App title={title} />
-    </FluentProvider>
+    <MsalProvider instance={msalInstance}>
+      <FluentProvider theme={webLightTheme}>
+        <App title={title} />
+      </FluentProvider>
+    </MsalProvider>
   );
 });
 
