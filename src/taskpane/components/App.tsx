@@ -14,12 +14,21 @@ import {
   useToastController
 } from "@fluentui/react-components";
 import { DesignIdeas24Regular, LockOpen24Regular, Ribbon24Regular } from "@fluentui/react-icons";
-import { displayJson, insertText, makeCellYellow, tooltip } from "../taskpane";
-import Login from "./Login";
+import { createNewSheet, displayJson, insertText, makeCellYellow } from "../taskpane";
 import { ToastIntent } from "@fluentui/react-toast";
+import Login from "./Login";
 
-interface AppProps {
+export interface AppProps {
   title: string;
+}
+
+export interface NotifyFunction {
+  (
+    status: ToastIntent,
+    title: string,
+    body: string,
+    timeout?: number
+  ): void;
 }
 
 const useStyles = makeStyles({
@@ -55,11 +64,16 @@ const App: React.FC<AppProps> = (props: AppProps) => {
   const toasterId = useId("toaster");
   const { dispatchToast } = useToastController(toasterId);
 
-  const notify = (status: ToastIntent = "success", body: string = "This is a toast body", timeout?: number, ) =>
+  const notify: NotifyFunction = (
+    status: ToastIntent = "success",
+    title: string = "This is a toast title",
+    body: string = "This is a toast body",
+    timeout?: number
+  ) =>
     dispatchToast(
-      <Toast> <ToastTitle action={<Link>Undo</Link>}>Email sent</ToastTitle>
-        <ToastBody subtitle="Subtitle">{body}</ToastBody> <ToastFooter> <Link>Action</Link> <Link>Action</Link>
-        </ToastFooter> </Toast>,
+      <Toast> <ToastTitle action={<Link>Undo</Link>}>{title}</ToastTitle>
+        <ToastBody >{body}</ToastBody>
+      </Toast>,
       { intent: status, timeout: timeout }
     );
 
@@ -67,8 +81,8 @@ const App: React.FC<AppProps> = (props: AppProps) => {
     <div className={styles.root} style={{ border: "5px solid red" }}>
       <Header logo="assets/logo-filled.png" title={props.title} message="Welcome" />
       <HeroList message="Discover what this add-in can do for you today!" items={listItems} />
-      <Login notify={notify} displayJson={displayJson}/>
-      <TextInsertion insertText={insertText} makeCellYellow={makeCellYellow} tooltip={tooltip} notify={notify} />
+      <Login notify={notify} displayJson={displayJson} />
+      <TextInsertion insertText={insertText} makeCellYellow={makeCellYellow} createNewSheet={createNewSheet} notify={notify} />
       <Toaster toasterId={toasterId} />
     </div>
   );

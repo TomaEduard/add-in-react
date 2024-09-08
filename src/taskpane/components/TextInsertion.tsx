@@ -1,12 +1,14 @@
 import * as React from "react";
 import { useState } from "react";
 import { Button, Field, makeStyles, Textarea, tokens } from "@fluentui/react-components";
+import { NotifyFunction } from "./App";
+import { createNewSheet } from "../taskpane";
 
 interface TextInsertionProps {
   insertText: (text: string) => void;
   makeCellYellow: (text: string) => void;
-  tooltip: () => void;
-  notify: () => void;
+  createNewSheet: (sheetName: string) => void;
+  notify: NotifyFunction;
 }
 
 const useStyles = makeStyles({
@@ -30,6 +32,7 @@ const useStyles = makeStyles({
   buttonContainer: {
     display: "flex",
     justifyContent: "center",
+    alignItems: "center",
     gap: "10px",
     marginTop: "20px"
   },
@@ -43,39 +46,54 @@ const TextInsertion: React.FC<TextInsertionProps> = (props: TextInsertionProps) 
 
   const handleTextInsertion = async () => {
     await props.insertText(text);
-    props.notify();
+    props.notify("success", "Text Inserted", "The text has been inserted successfully.");
   };
 
-  const handleTakeCellYellow = async () => {
+  const handleMakeCellYellow = async () => {
     await props.makeCellYellow(text);
-    props.notify();
-  };
-  const handleTooltip = async () => {
-    await props.tooltip();
-    props.notify();
+    props.notify("success", "Cell Colored", "The cell has been colored yellow.");
   };
 
-  // eslint-disable-next-line no-undef
+  const handleCreateNewSheet = async () => {
+    const sheetName = "NewSheet"; // You can change this to get the sheet name dynamically
+    await props.createNewSheet(sheetName);
+  };
+
   const handleTextChange = async (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setText(event.target.value);
   };
 
   const styles = useStyles();
 
-  return null;
-/*
   return (
     <div className={styles.textPromptAndInsertion}>
       <Field className={styles.textAreaField} size="large" label="Enter text to be inserted into the document.">
-        <Textarea size="large" value={text} onChange={handleTextChange} /> </Field>
-      <Field className={styles.instructions}>Click the button to insert text.</Field>
+        <Textarea size="large" value={text} onChange={handleTextChange} />
+      </Field>
       <div className={styles.buttonContainer}>
-        <Button className={styles.button} appearance="outline" disabled={false} size="medium" onClick={handleTextInsertion}> Insert text </Button>
-        <Button className={styles.button} appearance="outline" disabled={false} size="small" onClick={handleTakeCellYellow}> Make Yellow </Button>
+        <Button className={styles.button} appearance="outline" size="small" onClick={handleTextInsertion}>
+          Insert text
+        </Button>
+        <Button className={styles.button} appearance="outline" size="small" onClick={handleMakeCellYellow}>
+          Make Yellow
+        </Button>
+        <Button className={styles.button} appearance="outline" size="small" onClick={handleCreateNewSheet}>
+          New Sheet
+        </Button>
+      </div>
+      <div className={styles.buttonContainer}>
+        <Button className={styles.button} appearance="outline" size="small" onClick={handleTextInsertion}>
+          Insert text
+        </Button>
+        <Button className={styles.button} appearance="outline" size="small" onClick={handleMakeCellYellow}>
+          Make Yellow
+        </Button>
+        <Button className={styles.button} appearance="outline" size="small" onClick={handleCreateNewSheet}>
+          New Sheet
+        </Button>
       </div>
     </div>
-  );*/
-
+  );
 };
 
 export default TextInsertion;
