@@ -1,5 +1,9 @@
 /* global Excel console */
 
+export function loginFunction() {
+  console.log("Login");
+}
+
 export async function insertText(text: string) {
   // Write text to the selected cell.
   try {
